@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Zig1375/SwiftClickHouse.svg?branch=master)](https://travis-ci.org/Zig1375/SwiftClickHouse)
+
 ## Introduction
 
 ClickHouse Swift client library.
