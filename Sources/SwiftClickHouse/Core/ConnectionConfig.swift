@@ -2,7 +2,7 @@ import Foundation;
 
 public class ConnectionConfig {
     public let host : String;
-    public let port : UInt32;
+    public let port : Int32;
     public let user : String;
     public let password : String;
     public let database : String;
