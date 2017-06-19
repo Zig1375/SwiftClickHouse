@@ -19,21 +19,26 @@ public class Connection {
     private let compression : CompressionState;
 
 
-    public convenience init(host : String? = nil, port : Int, database : String = "default", user : String = "default", password : String = "", compression : CompressionState = .Disable) throws {
+    public convenience init(host : String = "localhost", port : Int, database : String = "default", user : String = "default", password : String = "", compression : CompressionState = .Disable) throws {
         try self.init(host: host, port: Int32(port), database : database);
     }
 
-    public init(host : String? = nil, port : Int32? = nil, database : String = "default", user : String = "default", password : String = "", compression : CompressionState = .Disable) throws {
-        let signature = try Socket.Signature(protocolFamily: .inet, socketType: .stream, proto: .tcp, hostname: host ?? "localhost", port: port ?? 9000)
+    public init(host : String = "localhost", port : Int32 = 9000, database : String = "default", user : String = "default", password : String = "", compression : CompressionState = .Disable) throws {
+        let config = ConnectionConfig(host : host, port : port, database : database, user : user, password: password, compression: compression);
+        try self.init(config : config);
+    }
+
+    public init(config : ConnectionConfig) throws {
+        let signature = try Socket.Signature(protocolFamily: .inet, socketType: .stream, proto: .tcp, hostname: config.host, port: config.port)
         self.socket = try Socket.create(connectedUsing: signature!)
 
-        self.compression = compression;
+        self.compression = config.compression;
 
-        if (compression == CompressionState.Enable) {
+        if (config.compression == CompressionState.Enable) {
             throw ClickHouseError.NotImplemented(message: "Compression not implemented");
         }
 
-        try sendHello(database : database, user : user, password : password);
+        try sendHello(database : config.database, user : config.user, password : config.password);
     }
 
     public var isConnected : Bool {
@@ -216,15 +221,14 @@ public class Connection {
     public func insert(table : String, block : ClickHouseBlock) throws {
         try self.sendQuery(sql : "INSERT INTO \(table) VALUES");
 
-        let b = try receivePacket(breakOnData : true);
+        let _ = try receivePacket(breakOnData : true);
 
         let buffer = ByteBuffer();
         try block.addToBuffer(buffer: buffer, revision: self.serverInfo!.revision);
         try ClickHouseBlock().addToBuffer(buffer: buffer, revision: self.serverInfo!.revision);
 
         try socket.write(from: buffer.toData());
-        let b2 = try receivePacket();
-        print(b2);
+        let _ = try receivePacket();
     }
 
     func receivePacket(breakOnData : Bool = false) throws -> ClickHouseResult? {
