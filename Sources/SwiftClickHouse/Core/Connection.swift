@@ -23,7 +23,7 @@ public class Connection {
         try self.init(host: host, port: Int32(port), database : database);
     }
 
-    public init(host : String = "localhost", port : Int32 = 9000, database : String = "default", user : String = "default", password : String = "", compression : CompressionState = .Disable) throws {
+    public convenience init(host : String = "localhost", port : Int32 = 9000, database : String = "default", user : String = "default", password : String = "", compression : CompressionState = .Disable) throws {
         let config = ConnectionConfig(host : host, port : port, database : database, user : user, password: password, compression: compression);
         try self.init(config : config);
     }
