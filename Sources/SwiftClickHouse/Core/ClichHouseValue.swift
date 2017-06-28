@@ -7,7 +7,7 @@ public struct ClickHouseValue : CustomStringConvertible {
     public let val_array  : [ClickHouseValue]?;
     public let type        : ClickHouseType;
 
-    init(type : ClickHouseType, number : NSNumber) {
+    public init(type : ClickHouseType, number : NSNumber) {
         self.type       = type;
         self.val_number = number;
         self.val_string = nil;
@@ -15,7 +15,7 @@ public struct ClickHouseValue : CustomStringConvertible {
         self.val_array  = nil;
     }
 
-    init(type : ClickHouseType, string : String) {
+    public init(type : ClickHouseType, string : String) {
         self.type       = type;
         self.val_number = nil;
         self.val_string = string;
@@ -23,7 +23,7 @@ public struct ClickHouseValue : CustomStringConvertible {
         self.val_array  = nil;
     }
 
-    init(type : ClickHouseType, date : Date) {
+    public init(type : ClickHouseType, date : Date) {
         self.type       = type;
         self.val_number = nil;
         self.val_string = nil;
@@ -31,7 +31,7 @@ public struct ClickHouseValue : CustomStringConvertible {
         self.val_array  = nil;
     }
 
-    init(type : ClickHouseType, array : [ClickHouseValue]) {
+    public init(type : ClickHouseType, array : [ClickHouseValue]) {
         self.type       = type;
         self.val_number = nil;
         self.val_string = nil;
