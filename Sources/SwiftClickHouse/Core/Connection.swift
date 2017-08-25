@@ -14,7 +14,6 @@ public class Connection {
     static public let DBMS_MIN_REVISION_WITH_QUOTA_KEY_IN_CLIENT_INFO : UInt64 = 54060;
 
     private let socket : Socket;
-    private var queryCounter : UInt64 = 0;
     private var serverInfo : ServerInfo? = nil;
     private let compression : CompressionState;
 
@@ -301,8 +300,7 @@ public class Connection {
     }
 
     private func generateQueryId() -> String {
-        self.queryCounter += 1;
-        return "\(self.queryCounter)";
+        return "\(UUID().hashValue)";
     }
 
     private func read(socket: Socket) throws -> SocketReader? {
