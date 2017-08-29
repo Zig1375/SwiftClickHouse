@@ -1,5 +1,5 @@
 import Foundation
-import Socket
+import zSocket
 
 public class Connection {
     static private let DBMS_VERSION_MAJOR : UInt64 = 1;

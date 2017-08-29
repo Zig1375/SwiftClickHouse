@@ -1,5 +1,5 @@
 import Foundation
-import Socket
+import zSocket
 
 
 class SocketReader {
@@ -26,7 +26,7 @@ class SocketReader {
 
     private func readFromSocket() -> Bool {
         var data = Data();
-        if let bytesRead = try? socket.read(into: &data, asis : true) {
+        if let bytesRead = try? socket.read(into: &data) {
             if bytesRead > 0 {
                 // print("Read \(bytesRead) from socket...");
 
