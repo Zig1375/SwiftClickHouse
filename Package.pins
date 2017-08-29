@@ -4,14 +4,14 @@
     {
       "package": "Socket",
       "reason": null,
-      "repositoryURL": "https://github.com/IBM-Swift/BlueSocket.git",
-      "version": "0.12.52"
+      "repositoryURL": "https://github.com/Zig1375/BlueSocket.git",
+      "version": "0.12.62"
     },
     {
       "package": "SwiftyJSON",
       "reason": null,
       "repositoryURL": "https://github.com/IBM-Swift/SwiftyJSON",
-      "version": "16.0.0"
+      "version": "16.0.1"
     }
   ],
   "version": 1

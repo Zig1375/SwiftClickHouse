@@ -26,7 +26,7 @@ class SocketReader {
 
     private func readFromSocket() -> Bool {
         var data = Data();
-        if let bytesRead = try? socket.readOnce(into: &data) {
+        if let bytesRead = try? socket.read(into: &data, asis : true) {
             if bytesRead > 0 {
                 // print("Read \(bytesRead) from socket...");
 
