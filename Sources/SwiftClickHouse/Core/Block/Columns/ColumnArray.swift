@@ -24,7 +24,6 @@ class ColumnArray {
         var list = [ClickHouseValue]();
         for i in 0..<num_rows {
             if let values = Block.loadColumnByType(num_rows: offsets[Int(i)], code: in_array_code, socketReader: socketReader) {
-                print("\(in_array_code) = \(values)")
                 list.append(ClickHouseValue(type : type, array : values));
             } else {
                 return nil;
