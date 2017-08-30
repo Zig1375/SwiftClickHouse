@@ -11,23 +11,27 @@ class ColumnArray {
                 return nil;
         }
 
-        if let size : UInt64 = socketReader.readInt() {
-            var list = [ClickHouseValue]();
-
-            for _ in 0..<num_rows {
-                if (size > 0) {
-                    if let values = Block.loadColumnByType(num_rows: size, code: in_array_code, socketReader: socketReader) {
-                        list.append(ClickHouseValue(type : type, array : values));
-                    } else {
-                        return nil;
-                    }
-                }
+        // Получаем смещения
+        var offsets = [UInt64]();
+        var prev_offset : UInt64 = 0;
+        for _ in 0..<num_rows {
+            if let offset : UInt64 = socketReader.readInt() {
+                offsets.append(offset - prev_offset);
+                prev_offset = offset;
             }
-
-            return list;
         }
 
-        return nil;
+        var list = [ClickHouseValue]();
+        for i in 0..<num_rows {
+            if let values = Block.loadColumnByType(num_rows: offsets[Int(i)], code: in_array_code, socketReader: socketReader) {
+                print("\(in_array_code) = \(values)")
+                list.append(ClickHouseValue(type : type, array : values));
+            } else {
+                return nil;
+            }
+        }
+
+        return list;
     }
 
     static func save (buffer : ByteBuffer, type : ClickHouseType, row : ClickHouseValue) {
