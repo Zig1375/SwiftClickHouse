@@ -20,6 +20,9 @@ extension String {
         } catch let error as NSError {
             print("invalid regex: \(error.localizedDescription)")
             return []
+        } catch {
+            print("invalid regex")
+            return []
         }
     }
 }
