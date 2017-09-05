@@ -12,7 +12,7 @@ public class ClickHouseResult : CustomStringConvertible {
         return self.block.rows;
     }
 
-    public func fetchRow(row : Int? =  nil) -> [String : ClickHouseValue]? {
+    public func fetchRow(row : Int? =  nil) -> OrderedDictionary<String, ClickHouseValue>? {
         if (row != nil) {
             self.current_row = row!;
         }
@@ -21,7 +21,7 @@ public class ClickHouseResult : CustomStringConvertible {
             return nil;
         }
 
-        var result = [String : ClickHouseValue]();
+        var result = OrderedDictionary<String, ClickHouseValue>();
         for name in self.block.columns_order {
             if let val = self.block.columns[name]?[self.current_row] {
                 result[name] = val;
