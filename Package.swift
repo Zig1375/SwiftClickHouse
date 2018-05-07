@@ -5,6 +5,6 @@ let package = Package(
   targets:      [],
   dependencies: [
       .Package(url: "https://github.com/IBM-Swift/SwiftyJSON", majorVersion: 17, minor: 0),
-      .Package(url: "https://github.com/Zig1375/BlueSocket2.git", majorVersion: 0, minor: 12)
+      .Package(url: "https://github.com/IBM-Swift/BlueSocket.git", majorVersion: 1, minor: 0)
   ]
 )
