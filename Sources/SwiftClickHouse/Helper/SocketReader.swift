@@ -1,5 +1,5 @@
 import Foundation
-import zSocket
+import Socket
 
 
 class SocketReader {
