@@ -4,8 +4,6 @@
 
 ClickHouse Swift client library.
 
-Now supported ONLY MacOs
-
 ## Here is an example on how to use it:
 
 ### Connection
