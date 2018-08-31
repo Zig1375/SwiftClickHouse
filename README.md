@@ -24,6 +24,31 @@ do {
 }
 ```
 
+
+### Query
+
+```swift
+if let result = try? connect.query(sql: "select * from test") {
+    let row = result!.fetchRow()!;
+    print(row["a"]!.double)
+    print(result!.description);
+}
+```
+
+
+### Insert
+
+```swift
+let block = ClickHouseBlock();
+block.append(name: "a", 100.500);
+
+if let _ = try? connect.insert(table: "test", block: block) {
+    // Success
+}
+```
+
+
+
 #### Attention
 
 Compression not implemented now.
