@@ -83,22 +83,25 @@ class Block {
         return Block.loadColumnByType(num_rows : num_rows, code : code, socketReader : socketReader);
     }
 
-    static func loadColumnByType(num_rows : UInt64, code : ClickHouseType, socketReader : SocketReader) -> [ClickHouseValue]? {
+    static func loadColumnByType(num_rows : UInt64, code : ClickHouseType, socketReader : SocketReader, nullable: Bool = false) -> [ClickHouseValue]? {
         switch (code) {
             case .UInt8, .UInt16, .UInt32, .UInt64, .Int8, .Int16, .Int32, .Int64, .Float32, .Float64 :
-                return ColumnNumber.load(num_rows : num_rows, type : code, socketReader : socketReader);
+                return ColumnNumber.load(num_rows : num_rows, type : code, socketReader : socketReader, nullable: nullable);
 
             case .Date, .DateTime :
-                return ColumnDate.load(num_rows : num_rows, type : code, socketReader : socketReader);
+                return ColumnDate.load(num_rows : num_rows, type : code, socketReader : socketReader, nullable: nullable);
 
             case .String, .FixedString :
-                return ColumnString.load(num_rows : num_rows, type : code, socketReader : socketReader);
+                return ColumnString.load(num_rows : num_rows, type : code, socketReader : socketReader, nullable: nullable);
 
             case .Array :
-                return ColumnArray.load(num_rows : num_rows, type : code, socketReader : socketReader);
+                return ColumnArray.load(num_rows : num_rows, type : code, socketReader : socketReader, nullable: nullable);
 
             case .Enum8, .Enum16 :
-                return ColumnEnum.load(num_rows : num_rows, type : code, socketReader : socketReader);
+                return ColumnEnum.load(num_rows : num_rows, type : code, socketReader : socketReader, nullable: nullable);
+
+            case let .Nullable(in_type):
+                return Block.loadColumnByType(num_rows : num_rows, code : in_type, socketReader : socketReader, nullable: true);
 
             default :
                 return nil;
@@ -115,6 +118,8 @@ class Block {
             t = "Enum8";
         } else if (type.hasPrefix("Enum16")) {
             t = "Enum16";
+        } else if (type.hasPrefix("Nullable")) {
+            t = "Nullable";
         } else {
             t = type;
         }
@@ -176,6 +181,15 @@ class Block {
 
                 if let temp = self.getTypeCode(type : n) {
                     return ClickHouseType.Array(temp);
+                }
+                return nil;
+
+            case "Nullable" :
+                let tn = type.components(separatedBy: "(")[1];
+                let n  = tn.components(separatedBy: ")")[0];
+
+                if let temp = self.getTypeCode(type : n) {
+                    return ClickHouseType.Nullable(temp);
                 }
                 return nil;
 

@@ -1,7 +1,7 @@
 import Foundation
 
 class ColumnString {
-    static func load(num_rows : UInt64, type : ClickHouseType, socketReader : SocketReader) -> [ClickHouseValue]? {
+    static func load(num_rows : UInt64, type : ClickHouseType, socketReader : SocketReader, nullable: Bool = false) -> [ClickHouseValue]? {
         var list = [ClickHouseValue]();
 
         for _ in 0..<num_rows {

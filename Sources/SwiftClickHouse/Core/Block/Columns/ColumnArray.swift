@@ -1,7 +1,7 @@
 import Foundation
 
 class ColumnArray {
-    static func load(num_rows : UInt64, type : ClickHouseType, socketReader : SocketReader) -> [ClickHouseValue]? {
+    static func load(num_rows : UInt64, type : ClickHouseType, socketReader : SocketReader, nullable: Bool = false) -> [ClickHouseValue]? {
         let in_array_code : ClickHouseType;
         switch (type) {
             case let .Array(in_array) :
@@ -23,7 +23,7 @@ class ColumnArray {
 
         var list = [ClickHouseValue]();
         for i in 0..<num_rows {
-            if let values = Block.loadColumnByType(num_rows: offsets[Int(i)], code: in_array_code, socketReader: socketReader) {
+            if let values = Block.loadColumnByType(num_rows: offsets[Int(i)], code: in_array_code, socketReader: socketReader, nullable: nullable) {
                 list.append(ClickHouseValue(type : type, array : values));
             } else {
                 return nil;

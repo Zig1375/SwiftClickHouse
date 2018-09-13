@@ -5,7 +5,8 @@ public struct ClickHouseValue : CustomStringConvertible {
     public let val_string : String?;
     public let val_date   : Date?;
     public let val_array  : [ClickHouseValue]?;
-    public let type        : ClickHouseType;
+    public let type       : ClickHouseType;
+    public let isNull     : Bool;
 
     public init(type : ClickHouseType, number : NSNumber) {
         self.type       = type;
@@ -13,6 +14,7 @@ public struct ClickHouseValue : CustomStringConvertible {
         self.val_string = nil;
         self.val_date   = nil;
         self.val_array  = nil;
+        self.isNull     = false;
     }
 
     public init(type : ClickHouseType, string : String) {
@@ -21,6 +23,7 @@ public struct ClickHouseValue : CustomStringConvertible {
         self.val_string = string;
         self.val_date   = nil;
         self.val_array  = nil;
+        self.isNull     = false;
     }
 
     public init(type : ClickHouseType, date : Date) {
@@ -29,6 +32,7 @@ public struct ClickHouseValue : CustomStringConvertible {
         self.val_string = nil;
         self.val_date   = date;
         self.val_array  = nil;
+        self.isNull     = false;
     }
 
     public init(type : ClickHouseType, array : [ClickHouseValue]) {
@@ -37,9 +41,23 @@ public struct ClickHouseValue : CustomStringConvertible {
         self.val_string = nil;
         self.val_date   = nil;
         self.val_array  = array;
+        self.isNull     = false;
+    }
+
+    public init(type : ClickHouseType) {
+        self.type       = type;
+        self.val_number = nil;
+        self.val_string = nil;
+        self.val_date   = nil;
+        self.val_array  = nil;
+        self.isNull     = true;
     }
 
     public var int8 : Int8? {
+        if self.isNull {
+            return nil;
+        }
+
         switch (self.type) {
             case .Int8 :
                 return self.val_number?.int8Value;
@@ -50,6 +68,10 @@ public struct ClickHouseValue : CustomStringConvertible {
     }
 
     public var uint8 : UInt8? {
+        if self.isNull {
+            return nil;
+        }
+
         switch (self.type) {
             case .UInt8 :
                 return self.val_number?.uint8Value;
@@ -60,6 +82,10 @@ public struct ClickHouseValue : CustomStringConvertible {
     }
 
     public var uint16 : UInt16? {
+        if self.isNull {
+            return nil;
+        }
+
         switch (self.type) {
             case .UInt8, .UInt16 :
                 return self.val_number?.uint16Value;
@@ -70,6 +96,10 @@ public struct ClickHouseValue : CustomStringConvertible {
     }
 
     public var int16 : Int16? {
+        if self.isNull {
+            return nil;
+        }
+
         switch (self.type) {
             case .Int8, .Int16 :
                 return self.val_number?.int16Value;
@@ -80,6 +110,10 @@ public struct ClickHouseValue : CustomStringConvertible {
     }
 
     public var uint32 : UInt32? {
+        if self.isNull {
+            return nil;
+        }
+
         switch (self.type) {
             case .UInt8, .UInt16, .UInt32 :
                 return self.val_number?.uint32Value;
@@ -90,6 +124,10 @@ public struct ClickHouseValue : CustomStringConvertible {
     }
 
     public var int32 : Int32? {
+        if self.isNull {
+            return nil;
+        }
+
         switch (self.type) {
             case .Int8, .Int16, .Int32 :
                 return self.val_number?.int32Value;
@@ -100,6 +138,10 @@ public struct ClickHouseValue : CustomStringConvertible {
     }
 
     public var uint64 : UInt64? {
+        if self.isNull {
+            return nil;
+        }
+
         switch (self.type) {
             case .UInt8, .UInt16, .UInt32, .UInt64 :
                 return self.val_number?.uint64Value;
@@ -110,6 +152,10 @@ public struct ClickHouseValue : CustomStringConvertible {
     }
 
     public var int64 : Int64? {
+        if self.isNull {
+            return nil;
+        }
+
         switch (self.type) {
             case .Int8, .Int16, .Int32, .Int64 :
                 return self.val_number?.int64Value;
@@ -120,6 +166,10 @@ public struct ClickHouseValue : CustomStringConvertible {
     }
 
     public var float : Float? {
+        if self.isNull {
+            return nil;
+        }
+
         switch (self.type) {
             case .Float32 :
                 if let n = self.val_number?.floatValue, !n.isNaN && !n.isInfinite {
@@ -134,6 +184,10 @@ public struct ClickHouseValue : CustomStringConvertible {
     }
 
     public var double : Double? {
+        if self.isNull {
+            return nil;
+        }
+
         switch (self.type) {
             case .Float64 :
                 if let n = self.val_number?.doubleValue, !n.isNaN && !n.isInfinite {
@@ -180,6 +234,10 @@ public struct ClickHouseValue : CustomStringConvertible {
     }
 
     public var string : String {
+        if (self.isNull) {
+            return "NIL";
+        }
+
         switch (self.type) {
             case .String, .FixedString :
                 return self.val_string!;

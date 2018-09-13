@@ -1,7 +1,7 @@
 import Foundation
 
 class ColumnNumber {
-    static func load(num_rows : UInt64, type : ClickHouseType, socketReader : SocketReader) -> [ClickHouseValue]? {
+    static func load(num_rows : UInt64, type : ClickHouseType, socketReader : SocketReader, nullable: Bool = false) -> [ClickHouseValue]? {
         var add : ((SocketReader) -> NSNumber?);
 
         switch (type) {
@@ -51,14 +51,30 @@ class ColumnNumber {
 
         var list = [ClickHouseValue]();
         for _ in 0..<num_rows {
+            var isNull = false;
+            if ((nullable) && (ColumnNumber.isNull(socketReader: socketReader))) {
+                list.append(ClickHouseValue(type : type));
+                isNull = true;
+            }
+
             if let t = add(socketReader) {
-                list.append(ClickHouseValue(type : type, number : t));
+                if (!isNull) {
+                    list.append(ClickHouseValue(type: type, number: t));
+                }
             } else {
                 return nil;
             }
         }
 
         return list;
+    }
+
+    private static func isNull(socketReader: SocketReader) -> Bool {
+        if let t : UInt8 = socketReader.readInt() {
+            return t == 1;
+        }
+
+        return false;
     }
 
     private static func addUInt8(socketReader : SocketReader) -> NSNumber? {
