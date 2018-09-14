@@ -83,25 +83,25 @@ class Block {
         return Block.loadColumnByType(num_rows : num_rows, code : code, socketReader : socketReader);
     }
 
-    static func loadColumnByType(num_rows : UInt64, code : ClickHouseType, socketReader : SocketReader, nullable: Bool = false) -> [ClickHouseValue]? {
+    static func loadColumnByType(num_rows : UInt64, code : ClickHouseType, socketReader : SocketReader, nulls: [Bool]? = nil) -> [ClickHouseValue]? {
         switch (code) {
             case .UInt8, .UInt16, .UInt32, .UInt64, .Int8, .Int16, .Int32, .Int64, .Float32, .Float64 :
-                return ColumnNumber.load(num_rows : num_rows, type : code, socketReader : socketReader, nullable: nullable);
+                return ColumnNumber.load(num_rows : num_rows, type : code, socketReader : socketReader, nulls: nulls);
 
             case .Date, .DateTime :
-                return ColumnDate.load(num_rows : num_rows, type : code, socketReader : socketReader, nullable: nullable);
+                return ColumnDate.load(num_rows : num_rows, type : code, socketReader : socketReader, nulls: nulls);
 
             case .String, .FixedString :
-                return ColumnString.load(num_rows : num_rows, type : code, socketReader : socketReader, nullable: nullable);
+                return ColumnString.load(num_rows : num_rows, type : code, socketReader : socketReader, nulls: nulls);
 
             case .Array :
-                return ColumnArray.load(num_rows : num_rows, type : code, socketReader : socketReader, nullable: nullable);
+                return ColumnArray.load(num_rows : num_rows, type : code, socketReader : socketReader, nulls: nulls);
 
             case .Enum8, .Enum16 :
-                return ColumnEnum.load(num_rows : num_rows, type : code, socketReader : socketReader, nullable: nullable);
+                return ColumnEnum.load(num_rows : num_rows, type : code, socketReader : socketReader, nulls: nulls);
 
-            case let .Nullable(in_type):
-                return Block.loadColumnByType(num_rows : num_rows, code : in_type, socketReader : socketReader, nullable: true);
+            case let .Nullable(subtype):
+                return ColumnNullable.load(num_rows : num_rows, type : subtype, socketReader : socketReader);
 
             default :
                 return nil;

@@ -1,7 +1,7 @@
 import Foundation
 
 class ColumnDate {
-    static func load(num_rows : UInt64, type : ClickHouseType, socketReader : SocketReader, nullable: Bool = false) -> [ClickHouseValue]? {
+    static func load(num_rows : UInt64, type : ClickHouseType, socketReader : SocketReader, nulls: [Bool]? = nil) -> [ClickHouseValue]? {
         var list = [ClickHouseValue]();
 
         for _ in 0..<num_rows {
