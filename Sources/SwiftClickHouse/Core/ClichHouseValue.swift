@@ -8,13 +8,13 @@ public struct ClickHouseValue : CustomStringConvertible {
     public let type       : ClickHouseType;
     public let isNull     : Bool;
 
-    public init(type : ClickHouseType, number : NSNumber) {
+    public init(type : ClickHouseType, number : NSNumber, isNull: Bool = false) {
         self.type       = type;
         self.val_number = number;
         self.val_string = nil;
         self.val_date   = nil;
         self.val_array  = nil;
-        self.isNull     = false;
+        self.isNull     = isNull;
     }
 
     public init(type : ClickHouseType, string : String) {

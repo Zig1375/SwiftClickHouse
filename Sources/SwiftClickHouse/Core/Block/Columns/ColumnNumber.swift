@@ -52,9 +52,7 @@ class ColumnNumber {
         var list = [ClickHouseValue]();
         for i in 0..<num_rows {
             if let t = add(socketReader) {
-                if (!ColumnNumber.isNull(i, nulls: nulls)) {
-                    list.append(ClickHouseValue(type: type, number: t));
-                }
+                list.append(ClickHouseValue(type: type, number: t, isNull: ColumnNumber.isNull(i, nulls: nulls)));
             } else {
                 return nil;
             }
