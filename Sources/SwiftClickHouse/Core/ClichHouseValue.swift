@@ -189,6 +189,13 @@ public struct ClickHouseValue : CustomStringConvertible {
         }
 
         switch (self.type) {
+            case .Float32 :
+                if let n = self.val_number?.floatValue, !n.isNaN && !n.isInfinite {
+                    return Double(n);
+                } else {
+                    return nil;
+                }
+
             case .Float64 :
                 if let n = self.val_number?.doubleValue, !n.isNaN && !n.isInfinite {
                     return n;
