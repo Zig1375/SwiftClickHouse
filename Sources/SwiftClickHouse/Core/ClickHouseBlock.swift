@@ -155,6 +155,11 @@ public class ClickHouseBlock {
         }
     }
 
+    public func append(name : String, datetime : Date) {
+        let t = ClickHouseValue(type : .DateTime, date : datetime);
+        self.append(name: name, value: t);
+    }
+
 
     func addToBuffer(buffer : ByteBuffer, revision : UInt64) throws {
         // Считаем кол-во строк
