@@ -142,7 +142,6 @@ public class ClickHouseBlock {
         }
     }
 
-
     // Date
     public func append(name : String, value : Date) {
         self.append(name: name, value: [value]);
